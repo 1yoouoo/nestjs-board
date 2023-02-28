@@ -1,8 +1,5 @@
 import { CreateBoardDto } from './DTO/create-board.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BoardStatus } from './boards-status.enum';
-import { v1 as uuid } from 'uuid';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './boards.entity';
 import { BoardsRepository } from './board.repository';
 
@@ -42,6 +39,13 @@ export class BoardsService {
   //   }
   //   return found;
   // }
+  async deleteBoard(id: number): Promise<void> {
+    const result = await this.boardRepository.db.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Can't find Board with ${id}`);
+    }
+  }
   // deleteBoard(id: string): void {
   //   const found = this.getBoardById(id);
   //   this.boards = this.boards.filter((board) => board.id !== found.id);
